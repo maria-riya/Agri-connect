@@ -2,11 +2,11 @@
 require_once __DIR__.'/includes/db.php';
 if(session_status()===PHP_SESSION_NONE) session_start();
 
-if(!isset($_SESSION['user_id'])){
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null);
+if(!$user_id){
     header('Location: /login.php');
     exit;
 }
-$user_id = $_SESSION['user_id'];
 $product_id = (int)$_POST['product_id'];
 $qty = max(1,(int)$_POST['quantity']);
 
