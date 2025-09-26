@@ -19,11 +19,11 @@ $stmt->execute([$id]); $p = $stmt->fetch(); if(!$p){ echo '<div class="alert ale
                 <div class="mb-2"><span class="font-semibold">Category:</span> <?php echo htmlspecialchars($p['category_name']); ?></div>
                 <div class="mb-2"><span class="font-semibold">Seller:</span> <?php echo htmlspecialchars($p['seller_name']); ?></div>
             </div>
-            <form method="POST" action="/cart_add.php" class="flex items-center gap-2 mt-4">
-                <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
-                <input name="quantity" type="number" min="1" value="1" class="border rounded px-2 py-1 w-20" aria-label="Quantity">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition flex items-center gap-2"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-            </form>
+           <form method="POST" action="/cart_add.php" class="flex items-center gap-2 mt-4">
+    <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
+    <input name="quantity" type="number" min="1" value="1" class="border rounded px-2 py-1 w-20" aria-label="Quantity">
+    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition flex items-center gap-2"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+</form>
             <form method="POST" action="/checkout.php" class="mt-2">
                 <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
                 <input type="hidden" name="quantity" value="1">

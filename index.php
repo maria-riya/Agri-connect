@@ -106,11 +106,18 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                 </div>
                                 <div class="product-actions">
-                                    <a href="product.php?id=<?= $row['id'] ?>" class="btn-view"><i class="fas fa-eye"></i>View Details</a>
-                                    <button class="btn-add-cart" onclick="addToCart(<?= $row['id'] ?>)"><i class="fas fa-shopping-cart"></i></button>
-                                </div>
-                            </div>
-                        </div>
+    <a href="product.php?id=<?= $row['id'] ?>" class="btn-view">
+        <i class="fas fa-eye"></i>
+        View Details
+    </a>
+    <form action="cart_add.php" method="POST" class="add-to-cart-form">
+        <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="btn-add-cart">
+            <i class="fas fa-shopping-cart"></i>
+        </button>
+    </form>
+</div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="no-products">

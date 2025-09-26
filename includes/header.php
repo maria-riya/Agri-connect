@@ -23,7 +23,7 @@ if (session_status() == PHP_SESSION_NONE) {
             </div>
             <div class="flex items-center space-x-6">
                 <a href="index.php" class="text-gray-700 hover:text-green-600">Home</a>
-                <a href="product.php" class="text-gray-700 hover:text-green-600">Products</a>
+                <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
                 <a href="about.php" class="text-gray-700 hover:text-green-600">About</a>
                 <a href="contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
                 <?php if (isset($_SESSION['user_id'])): ?>
