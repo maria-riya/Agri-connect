@@ -343,7 +343,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="registration-container">
         <div class="logo">
             <i class="fas fa-seedling"></i>
-            <h1>AgriConnect</h1>
+            <h1>The Tuber Cart</h1>
             <p>Join our agricultural community</p>
         </div>
 
