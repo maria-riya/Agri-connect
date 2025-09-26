@@ -66,3 +66,15 @@ if (session_status() == PHP_SESSION_NONE) {
         </div>
     </nav>
     <script src="assets/js/main.js" defer></script>
+    <script>
+    function updateCartCount() {
+        fetch('cart_count.php')
+            .then(res => res.json())
+            .then(data => {
+                var cartCount = document.getElementById('cart-count');
+                if(cartCount) cartCount.textContent = data.count;
+            });
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+    window.addEventListener('cart-updated', updateCartCount);
+    </script>

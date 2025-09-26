@@ -59,13 +59,13 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <i class="fas fa-eye"></i>
         View Details
     </a>
-    <form action="cart_add.php" method="POST" class="add-to-cart-form">
+    <div class="add-to-cart-form" data-product-id="<?= $row['id'] ?>">
         <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
         <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="btn-add-cart">
-            <i class="fas fa-shopping-cart"></i>
+        <button type="button" class="btn-add-cart">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
         </button>
-    </form>
+    </div>
 </div>
                     </div>
                 </div>
@@ -79,4 +79,45 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart-form .btn-add-cart').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            const formDiv = btn.closest('.add-to-cart-form');
+            const productId = formDiv.getAttribute('data-product-id');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            fetch('cart_add.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `product_id=${productId}&quantity=1`
+            })
+            .then(res => {
+                if(res.redirected) {
+                    window.location = res.url;
+                    return;
+                }
+                return res.text();
+            })
+            .then(() => {
+                formDiv.innerHTML = `<button type=\"button\" class=\"btn-go-cart bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex items-center gap-2\"><i class='fas fa-shopping-cart'></i> Go to Cart</button>`;
+                updateCartCount();
+                window.dispatchEvent(new Event('cart-updated'));
+                formDiv.querySelector('.btn-go-cart').addEventListener('click', function() {
+                    window.location = 'cart.php';
+                });
+            });
+        });
+    });
+    function updateCartCount() {
+        fetch('cart_count.php')
+            .then(res => res.json())
+            .then(data => {
+                const cartCount = document.getElementById('cart-count');
+                if(cartCount) cartCount.textContent = data.count;
+            });
+    }
+    updateCartCount();
+});
+</script>
 <?php include __DIR__ . "/includes/footer.php"; ?>
