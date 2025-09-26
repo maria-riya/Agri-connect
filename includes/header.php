@@ -64,7 +64,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 } else {
                     // Default: customer
                 ?>
-                    <a href="index_customer.php" class="text-gray-700 hover:text-green-600">Home</a>
+                    <a href="index.php" class="text-gray-700 hover:text-green-600">Home</a>
                     <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
                     <a href="cart.php" class="text-gray-700 hover:text-green-600">Cart</a>
                     <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>

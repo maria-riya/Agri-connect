@@ -32,7 +32,7 @@ $stmt->execute([$id]); $p = $stmt->fetch(); if(!$p){ echo '<div class="alert ale
                <input name="quantity" type="number" min="1" value="1" class="border rounded px-2 py-1 w-20" aria-label="Quantity">
                <button id="addToCartBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition flex items-center gap-2"><i class="fas fa-cart-plus"></i> Add to Cart</button>
            </form>
-            <form method="POST" action="../checkout.php" class="mt-2">
+            <form method="POST" action="checkout.php" class="mt-2">
                 <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
                 <input type="hidden" name="quantity" value="1">
                 <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded shadow transition w-full flex items-center justify-center gap-2"><i class="fas fa-bolt"></i> Buy Now</button>

@@ -11,7 +11,6 @@ $sql = "SELECT p.*, AVG(r.rating) as avg_rating, COUNT(r.id) as review_count
         LIMIT 6";
 $stmt = $pdo->query($sql);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +23,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body>
+    <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">Fresh Premium Tubers</h1>
@@ -45,6 +45,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
 
+    <!-- Filters -->
     <section class="filter-section">
         <div class="container">
             <div class="filter-controls">
@@ -71,6 +72,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
 
+    <!-- Products Section -->
     <section class="products-section">
         <div class="container">
             <div class="section-header">
@@ -82,7 +84,20 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($rows as $index => $row): ?>
                         <div class="product-card" style="animation-delay: <?= ($index * 0.1) ?>s;">
                             <div class="product-image">
-                                <img src="uploads/products/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23f0f0f0%22/><text x=%22150%22 y=%22100%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22>No Image</text></svg>'">
+                                <?php
+                                $imgPath = $row['image'];              // path stored in DB (assets/images/...)
+                                $imgFile = __DIR__ . '/' . $imgPath;   // server absolute path for file_exists()
+
+                                if (!empty($imgPath) && file_exists($imgFile)) {
+                                    echo '<img src="' . htmlspecialchars($imgPath) . '" alt="' . htmlspecialchars($row['title']) . '">';
+                                } else {
+                                    echo '<img src="data:image/svg+xml,
+                                    <svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 300 200\'>
+                                    <rect width=\'300\' height=\'200\' fill=\'%23f0f0f0\'/>
+                                    <text x=\'150\' y=\'100\' text-anchor=\'middle\' dy=\'.3em\'
+                                    font-family=\'Arial\' font-size=\'16\' fill=\'%23999\'>No Image</text></svg>" alt="No Image">';
+                                }
+                                ?>
                                 <div class="product-badge">Fresh</div>
                                 <div class="product-favorite"><i class="far fa-heart"></i></div>
                             </div>
@@ -97,9 +112,9 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="product-rating">
                                         <div class="rating-stars">
                                             <?php
-                                                $rating = round($row['avg_rating']);
-                                                for ($i = 1; $i <= 5; $i++): ?>
-                                                    <i class="fas fa-star star <?php if($i > $rating) echo 'empty'; ?>"></i>
+                                            $rating = round($row['avg_rating']);
+                                            for ($i = 1; $i <= 5; $i++): ?>
+                                                <i class="fas fa-star star <?php if($i > $rating) echo 'empty'; ?>"></i>
                                             <?php endfor; ?>
                                         </div>
                                         <span class="rating-count">(<?= $row['review_count'] ?>)</span>
