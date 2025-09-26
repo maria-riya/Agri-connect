@@ -42,7 +42,15 @@ $total = 0; foreach($items as $it) $total += $it['price'] * $it['quantity'];
         <?php foreach($items as $it): ?>
             <tr class="border-b">
                 <td class="py-2 px-4">
-                    <img src="<?php echo !empty($it['image']) ? '/uploads/' . htmlspecialchars($it['image']) : '/assets/images/logo.png'; ?>" alt="<?php echo htmlspecialchars($it['title']); ?>" class="w-16 h-16 object-cover rounded">
+                    <?php
+                    $imgPath = $it['image'];
+                    if(strpos($imgPath, 'assets/images/') === 0){
+                        $imgSrc = $imgPath;
+                    } else {
+                        $imgSrc = '/uploads/' . $imgPath;
+                    }
+                    ?>
+                    <img src="<?php echo !empty($imgPath) ? htmlspecialchars($imgSrc) : '/assets/images/logo.png'; ?>" alt="<?php echo htmlspecialchars($it['title']); ?>" class="w-16 h-16 object-cover rounded">
                 </td>
                 <td class="py-2 px-4 font-semibold text-gray-800"><?php echo htmlspecialchars($it['title']); ?></td>
                 <td class="py-2 px-4 text-green-700">₹<?php echo $it['price']; ?></td>

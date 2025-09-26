@@ -19,7 +19,7 @@ include __DIR__ . "/includes/header.php";
             <div class="md:col-span-1">
                 <h2 class="text-3xl font-semibold text-gray-800 mb-4">Our Mission</h2>
                 <p class="text-gray-700 leading-relaxed mb-4">
-                    The Tuber Cart, also known as **AgriConnect**, is a platform built to foster a thriving agricultural community. Our mission is to directly connect local farmers and wholesalers with customers, ensuring everyone gets the best value and quality. By cutting out the middlemen, we bring farm-fresh tubers directly to your doorstep.
+                    The Tuber Cart is a platform built to foster a thriving agricultural community. Our mission is to directly connect local farmers and wholesalers with customers, ensuring everyone gets the best value and quality. By cutting out the middlemen, we bring farm-fresh tubers directly to your doorstep.
                 </p>
                 <p class="text-gray-700 leading-relaxed">
                     We believe in fair trade, sustainability, and transparency. Our platform is designed to empower farmers, provide wholesalers with an efficient way to source products, and give customers access to the freshest produce.

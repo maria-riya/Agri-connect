@@ -28,7 +28,7 @@ if (session_status() == PHP_SESSION_NONE) {
                     // Guest navbar
                 ?>
                     <a href="index_guest.php" class="text-gray-700 hover:text-green-600">Home</a>
-                    <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
+                    <a href="products_guest.php" class="text-gray-700 hover:text-green-600">Products</a>
                     <a href="about.php" class="text-gray-700 hover:text-green-600">About</a>
                     <a href="contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
                     <a href="login.php" class="text-gray-700 hover:text-green-600">Login</a>

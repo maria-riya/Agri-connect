@@ -9,7 +9,15 @@ $stmt->execute([$id]); $p = $stmt->fetch(); if(!$p){ echo '<div class="alert ale
 <main class="container mx-auto p-6">
     <div class="flex flex-col md:flex-row bg-white rounded shadow-lg overflow-hidden">
         <div class="md:w-1/2 flex justify-center items-center p-6 bg-gray-50">
-            <img src="<?php echo !empty($p['image']) ? '/uploads/' . htmlspecialchars($p['image']) : '/assets/images/logo.png'; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" class="w-72 h-72 object-cover rounded-lg shadow">
+            <?php
+            $imgPath = $p['image'];
+            if(strpos($imgPath, 'assets/images/') === 0){
+                $imgSrc = $imgPath;
+            } else {
+                $imgSrc = '/uploads/' . $imgPath;
+            }
+            ?>
+            <img src="<?php echo !empty($imgPath) ? htmlspecialchars($imgSrc) : '/assets/images/logo.png'; ?>" alt="<?php echo htmlspecialchars($p['title']); ?>" class="w-72 h-72 object-cover rounded-lg shadow">
         </div>
         <div class="md:w-1/2 p-6 flex flex-col justify-between">
             <div>
@@ -19,12 +27,12 @@ $stmt->execute([$id]); $p = $stmt->fetch(); if(!$p){ echo '<div class="alert ale
                 <div class="mb-2"><span class="font-semibold">Category:</span> <?php echo htmlspecialchars($p['category_name']); ?></div>
                 <div class="mb-2"><span class="font-semibold">Seller:</span> <?php echo htmlspecialchars($p['seller_name']); ?></div>
             </div>
-           <form method="POST" action="cart_add.php" class="flex items-center gap-2 mt-4">
+           <form id="addToCartForm" class="flex items-center gap-2 mt-4">
                <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
                <input name="quantity" type="number" min="1" value="1" class="border rounded px-2 py-1 w-20" aria-label="Quantity">
-               <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition flex items-center gap-2"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+               <button id="addToCartBtn" type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition flex items-center gap-2"><i class="fas fa-cart-plus"></i> Add to Cart</button>
            </form>
-            <form method="POST" action="/checkout.php" class="mt-2">
+            <form method="POST" action="../checkout.php" class="mt-2">
                 <input type="hidden" name="product_id" value="<?php echo $p['id']; ?>">
                 <input type="hidden" name="quantity" value="1">
                 <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded shadow transition w-full flex items-center justify-center gap-2"><i class="fas fa-bolt"></i> Buy Now</button>
@@ -68,6 +76,36 @@ document.querySelectorAll('button[type="submit"]').forEach(btn => {
     btn.addEventListener('click', function(e) {
         btn.classList.add('scale-95');
         setTimeout(()=>btn.classList.remove('scale-95'), 200);
+    });
+});
+
+// AJAX Add to Cart and button swap
+document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = document.getElementById('addToCartBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="animate-spin mr-2"><i class="fas fa-spinner"></i></span> Adding...';
+    fetch('cart_add.php', {
+        method: 'POST',
+        body: new FormData(form)
+    })
+    .then(res => {
+        if(res.redirected){
+            // Cart add succeeded, swap button
+            btn.classList.remove('bg-green-600','hover:bg-green-700');
+            btn.classList.add('bg-blue-600','hover:bg-blue-700');
+            btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Go to Cart';
+            btn.disabled = false;
+            btn.onclick = function(){ window.location.href = '/project/cart.php'; };
+        } else {
+            return res.text().then(txt => { throw new Error(txt); });
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+        alert('Error adding to cart: ' + err.message);
     });
 });
 </script>
