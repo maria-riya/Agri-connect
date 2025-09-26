@@ -22,21 +22,46 @@ if (session_status() == PHP_SESSION_NONE) {
                 <span class="text-xl font-bold text-green-700">THE TUBER CART</span>
             </div>
             <div class="flex items-center space-x-6">
-                <a href="index.php" class="text-gray-700 hover:text-green-600">Home</a>
-                <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
-                <a href="about.php" class="text-gray-700 hover:text-green-600">About</a>
-                <a href="contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
-                <?php else: ?>
+                <?php
+                $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
+                if (!isset($_SESSION['user_id'])) {
+                    // Guest navbar
+                ?>
+                    <a href="index_guest.php" class="text-gray-700 hover:text-green-600">Home</a>
+                    <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
+                    <a href="about.php" class="text-gray-700 hover:text-green-600">About</a>
+                    <a href="contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
                     <a href="login.php" class="text-gray-700 hover:text-green-600">Login</a>
-                <?php endif; ?>
-                <a href="cart.php" class="relative text-gray-700 hover:text-green-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m5-9l2 9" />
-                    </svg>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
-                </a>
+                <?php
+                } else if ($role === 'admin') {
+                ?>
+                    <a href="index_admin.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
+                    <a href="admin/products.php" class="text-gray-700 hover:text-green-600">Manage Products</a>
+                    <a href="admin/users.php" class="text-gray-700 hover:text-green-600">Manage Users</a>
+                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
+                <?php
+                } else if ($role === 'farmer') {
+                ?>
+                    <a href="index_farmer.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
+                    <a href="farmer/products.php" class="text-gray-700 hover:text-green-600">My Products</a>
+                    <a href="farmer/orders.php" class="text-gray-700 hover:text-green-600">Orders</a>
+                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
+                <?php
+                } else if ($role === 'wholesaler') {
+                ?>
+                    <a href="index_wholesaler.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
+                    <a href="products.php" class="text-gray-700 hover:text-green-600">Bulk Products</a>
+                    <a href="cart.php" class="text-gray-700 hover:text-green-600">Cart</a>
+                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
+                <?php
+                } else {
+                    // Default: customer
+                ?>
+                    <a href="index_customer.php" class="text-gray-700 hover:text-green-600">Home</a>
+                    <a href="products.php" class="text-gray-700 hover:text-green-600">Products</a>
+                    <a href="cart.php" class="text-gray-700 hover:text-green-600">Cart</a>
+                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
+                <?php } ?>
             </div>
         </div>
     </nav>
