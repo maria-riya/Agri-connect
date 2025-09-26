@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/includes/db.php";
-include __DIR__ . "/includes/header.php";
+require_once dirname(__DIR__) . '/includes/db.php';
+include dirname(__DIR__) . '/includes/header.php';
 
 // Fetch all products
 $sql = "SELECT p.*, c.name AS category_name, AVG(r.rating) as avg_rating, COUNT(r.id) as review_count
@@ -13,6 +13,15 @@ $stmt = $pdo->query($sql);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <main class="container mx-auto p-4 py-8">
+<!-- Login Required Modal -->
+<div id="loginModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center">
+        <h3 class="text-xl font-bold mb-4 text-green-700">Login Required</h3>
+        <p class="mb-6 text-gray-700">To purchase products, you need to login.</p>
+        <a href="../login.php" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-semibold">Login</a>
+        <button id="closeModalBtn" class="ml-4 px-6 py-2 rounded border border-gray-300 text-gray-600 hover:bg-gray-100">Cancel</button>
+    </div>
+</div>
     <div class="text-center mb-8">
         <h2 class="text-3xl font-bold text-green-700">All Products</h2>
         <p class="text-gray-600">Browse our full selection of farm-fresh tubers.</p>
@@ -63,7 +72,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         
        <div class="product-actions">
-    <a href="product.php?id=<?= $row['id'] ?>" class="btn-view">
+    <a href="product_guest.php?id=<?= $row['id'] ?>" class="btn-view">
         <i class="fas fa-eye"></i>
         View Details
     </a>
@@ -89,43 +98,30 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </main>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    var loginModal = document.getElementById('loginModal');
+    var closeModalBtn = document.getElementById('closeModalBtn');
     document.querySelectorAll('.add-to-cart-form .btn-add-cart').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
-            const formDiv = btn.closest('.add-to-cart-form');
-            const productId = formDiv.getAttribute('data-product-id');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-            fetch('cart_add.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `product_id=${productId}&quantity=1`
-            })
-            .then(res => {
-                if(res.redirected) {
-                    window.location = res.url;
-                    return;
-                }
-                return res.text();
-            })
-            .then(() => {
-                formDiv.innerHTML = `<button type=\"button\" class=\"btn-go-cart bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex items-center gap-2\"><i class='fas fa-shopping-cart'></i> Go to Cart</button>`;
-                updateCartCount();
-                window.dispatchEvent(new Event('cart-updated'));
-                formDiv.querySelector('.btn-go-cart').addEventListener('click', function() {
-                    window.location = 'cart.php';
-                });
-            });
+            e.preventDefault();
+            loginModal.classList.remove('hidden');
         });
     });
-    function updateCartCount() {
-        fetch('cart_count.php')
-            .then(res => res.json())
-            .then(data => {
-                const cartCount = document.getElementById('cart-count');
-                if(cartCount) cartCount.textContent = data.count;
-            });
-    }
-    updateCartCount();
+    closeModalBtn.addEventListener('click', function() {
+        loginModal.classList.add('hidden');
+    });
+    // Optional: close modal on background click
+    loginModal.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.classList.add('hidden');
+        }
+    });
+    // Cart count logic (unchanged)
+    fetch('cart_count.php')
+        .then(res => res.json())
+        .then(data => {
+            const cartCount = document.getElementById('cart-count');
+            if(cartCount) cartCount.textContent = data.count;
+        });
 });
 </script>
-<?php include __DIR__ . "/includes/footer.php"; ?>
+<?php include dirname(__DIR__) . '/includes/footer.php'; ?>

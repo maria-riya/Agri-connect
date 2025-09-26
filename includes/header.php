@@ -10,15 +10,22 @@ if (session_status() == PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Tuber Cart</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/index.css">
+    <?php
+    // Detect if included from guest folder
+    $isGuest = (strpos($_SERVER['PHP_SELF'], '/guest/') !== false);
+    $cssPrefix = $isGuest ? '../' : '';
+    ?>
+    <link href="<?= $cssPrefix ?>https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="<?= $cssPrefix ?>https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= $cssPrefix ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?= $cssPrefix ?>assets/css/index.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen">
     <nav class="tuber-nav sticky top-0 z-10 py-4 bg-white shadow">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center">
-                <img src="assets/images/logo.png" alt="Logo" class="w-10 h-10 mr-2">
+                <img src="<?= $cssPrefix ?>assets/images/logo.png" alt="Logo" class="w-10 h-10 mr-2">
                 <span class="text-xl font-bold text-green-700">THE TUBER CART</span>
             </div>
             <div class="flex items-center space-x-6">
@@ -27,11 +34,11 @@ if (session_status() == PHP_SESSION_NONE) {
                 if (!isset($_SESSION['user_id'])) {
                     // Guest navbar
                 ?>
-                    <a href="index_guest.php" class="text-gray-700 hover:text-green-600">Home</a>
-                    <a href="products_guest.php" class="text-gray-700 hover:text-green-600">Products</a>
-                    <a href="about.php" class="text-gray-700 hover:text-green-600">About</a>
-                    <a href="contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
-                    <a href="login.php" class="text-gray-700 hover:text-green-600">Login</a>
+                    <a href="<?= $cssPrefix ?>guest/index_guest.php" class="text-gray-700 hover:text-green-600">Home</a>
+                    <a href="<?= $cssPrefix ?>guest/products_guest.php" class="text-gray-700 hover:text-green-600">Products</a>
+                    <a href="<?= $cssPrefix ?>about.php" class="text-gray-700 hover:text-green-600">About</a>
+                    <a href="<?= $cssPrefix ?>contact.php" class="text-gray-700 hover:text-green-600">Contact</a>
+                    <a href="<?= $cssPrefix ?>login.php" class="text-gray-700 hover:text-green-600">Login</a>
                 <?php
                 } else if ($role === 'admin') {
                 ?>
@@ -66,6 +73,18 @@ if (session_status() == PHP_SESSION_NONE) {
         </div>
     </nav>
     <script src="assets/js/main.js" defer></script>
+    <script>
+    // Fix JS path for guest pages
+    (function() {
+        var isGuest = window.location.pathname.indexOf('/guest/') !== -1;
+        if(isGuest) {
+            var script = document.createElement('script');
+            script.src = '../assets/js/main.js';
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+    })();
+    </script>
     <script>
     function updateCartCount() {
         fetch('cart_count.php')
