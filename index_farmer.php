@@ -55,7 +55,15 @@ $role = 'farmer';
                     <?php foreach ($rows as $index => $row): ?>
                         <div class="product-card" style="animation-delay: <?= ($index * 0.1) ?>s;">
                             <div class="product-image">
-                                <img src="uploads/products/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23f0f0f0%22/><text x=%22150%22 y=%22100%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22>No Image</text></svg>'">
+                                <?php
+                                $imgPath = $row['image'];
+                                if (strpos($imgPath, 'assets/images/') === 0) {
+                                    $imgSrc = $imgPath;
+                                } else {
+                                    $imgSrc = 'uploads/' . $imgPath;
+                                }
+                                ?>
+                                <img src="<?= htmlspecialchars($imgSrc) ?>" alt="<?= htmlspecialchars($row['title']) ?>" class="w-16 h-16 object-cover rounded" onerror="this.src='assets/images/logo.png'">
                                 <div class="product-badge">Fresh</div>
                             </div>
                             <div class="product-content">

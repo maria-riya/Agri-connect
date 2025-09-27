@@ -53,7 +53,6 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php foreach ($rows as $index => $row): ?>
                         <div class="product-card" style="animation-delay: <?= ($index * 0.1) ?>s;">
                             <div class="product-image">
-                                <?php
                                 $imgPath = $row['image'];
                                 if(strpos($imgPath, 'assets/images/') === 0){
                                     $imgSrc = '../' . $imgPath;
