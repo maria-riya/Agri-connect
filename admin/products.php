@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../includes/db.php";
 require_once __DIR__ . "/../includes/auth.php";
+requireAdmin();
 include __DIR__ . "/../includes/header.php";
 
 // Fetch products with category names
@@ -9,7 +10,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <main class="container mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">Manage Products</h2>
+    <h2 class="text-2xl font-bold mb-4">Manage Fertilizers & Tools</h2>
+    <p class="mb-6">Add, edit, or delete products sold to farmers.</p>
     <a href="add_product.php" class="text-white bg-green-700 px-4 py-2 rounded hover:bg-green-600">Add New Product</a>
 
     <table class="w-full mt-4 border-collapse border border-gray-300">

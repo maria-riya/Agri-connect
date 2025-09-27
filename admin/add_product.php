@@ -1,28 +1,33 @@
 <?php
 require_once __DIR__ . "/../includes/db.php";
 require_once __DIR__ . "/../includes/auth.php";
+requireAdmin(); // Added check to ensure only admin can access
 include __DIR__ . "/../includes/header.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $seller_id = 1; // or dynamically set from logged-in seller
+    $seller_id = 1; // Assuming admin is seller ID 1 or a placeholder
     $category_id = $_POST['category_id'];
     $title = $_POST['title'];
     $description = $_POST['description'] ?? '';
     $price = $_POST['price'];
     $stock = $_POST['stock'] ?? 0;
-
-    // Handle file upload
+    
     $image = null;
+    $error = null;
+
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . "/../assets/images/";  // target folder
+        $uploadDir = __DIR__ . "/../assets/images/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $fileName = uniqid("prod_", true) . "." . strtolower($ext);
         $targetPath = $uploadDir . $fileName;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-            $image = "assets/images/" . $fileName; // save relative path in DB
+            $image = "assets/images/" . $fileName;
         } else {
-            $error = "Image upload failed.";
+            $error = "Image upload failed. Please check folder permissions.";
         }
     }
 
@@ -37,12 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch categories
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <main class="container mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">Add New Product</h2>
+    <h2 class="text-2xl font-bold mb-4">Add New Product (Fertilizer/Tool)</h2>
     <?php if (isset($error)) echo "<p class='text-red-600'>$error</p>"; ?>
     <form method="post" enctype="multipart/form-data" class="space-y-4 max-w-md">
         <div>

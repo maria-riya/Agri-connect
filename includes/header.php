@@ -43,7 +43,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 } else if ($role === 'admin') {
                 ?>
                     <a href="index_admin.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
-                    <a href="admin/products.php" class="text-gray-700 hover:text-green-600">Manage Products</a>
+                    <a href="admin/add_fertilizer.php" class="text-gray-700 hover:text-green-600">Manage Products</a>
                     <a href="admin/users.php" class="text-gray-700 hover:text-green-600">Manage Users</a>
                     <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
                 <?php
