@@ -405,6 +405,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </label>
                     </div>
                     <div class="role-option">
+                        <input type="radio" name="role" value="admin" id="admin"
+                               <?= ($_POST['role'] ?? '') === 'admin' ? 'checked' : '' ?>>
+                        <label for="admin">
+                            <i class="fas fa-tractor"></i>
+                            <span>Admin</span>
+                        </label>
+                    </div>
+                    <div class="role-option">
                         <input type="radio" name="role" value="wholesaler" id="wholesaler"
                                <?= ($_POST['role'] ?? '') === 'wholesaler' ? 'checked' : '' ?>>
                         <label for="wholesaler">
