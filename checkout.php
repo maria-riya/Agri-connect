@@ -3,11 +3,11 @@ require_once __DIR__.'/includes/db.php'; // Adjust path if checkout.php is in pu
 if(session_status()===PHP_SESSION_NONE) session_start();
 
 // Ensure user is logged in
-if(!isset($_SESSION['user'])){
+if(!isset($_SESSION['user_id'])){
     header('Location:login.php');
     exit;
 }
-$user_id = $_SESSION['user']['id'];
+$user_id = $_SESSION['user_id'];
 
 // Initialize items and total
 $items = [];
@@ -85,8 +85,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 
         $pdo->commit();
 
-        // Redirect to order success page
-        header('Location: /public/order_success.php?id='.$order_id);
+        // Corrected Redirect: Use a relative path
+        header('Location: order_success.php?id='.$order_id);
         exit;
     } catch(Exception $e){
         $pdo->rollBack();
@@ -100,7 +100,7 @@ require_once __DIR__.'/includes/header.php';
 <h3>Checkout</h3>
 <p>Total: ₹<?php echo $total; ?></p>
 <form method="POST">
-    <?php 
+    <?php
     // Include hidden fields if direct Buy Now
     if(!empty($items) && count($items)===1 && isset($items[0]['product_id'])): ?>
         <input type="hidden" name="product_id" value="<?php echo $items[0]['product_id']; ?>">

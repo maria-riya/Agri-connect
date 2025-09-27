@@ -25,7 +25,7 @@ if (session_status() == PHP_SESSION_NONE) {
     <nav class="tuber-nav sticky top-0 z-10 py-4 bg-white shadow">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center">
-                <img src="<?= $cssPrefix ?>assets/images/logo.png" alt="Logo" class="w-10 h-10 mr-2">
+                <img src="/project/assets/images/logo.png" alt="Logo" class="w-10 h-10 mr-2">
                 <span class="text-xl font-bold text-green-700">THE TUBER CART</span>
             </div>
             <div class="flex items-center space-x-6">
@@ -49,10 +49,10 @@ if (session_status() == PHP_SESSION_NONE) {
                 <?php
                 } else if ($role === 'farmer') {
                 ?>
-                    <a href="index_farmer.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
-                    <a href="farmer/products.php" class="text-gray-700 hover:text-green-600">My Products</a>
-                    <a href="farmer/orders.php" class="text-gray-700 hover:text-green-600">Orders</a>
-                    <a href="logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
+                    <a href="/project/index_farmer.php" class="text-gray-700 hover:text-green-600">Dashboard</a>
+                    <a href="/project/farmer/products.php" class="text-gray-700 hover:text-green-600">My Products</a>
+                    <a href="/project/farmer/orders.php" class="text-gray-700 hover:text-green-600">Orders</a>
+                    <a href="/project/logout.php" class="text-gray-700 hover:text-green-600">Log Out</a>
                 <?php
                 } else if ($role === 'wholesaler') {
                 ?>

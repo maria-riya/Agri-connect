@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id']   = $user['id'];
                 $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_role'] = $user['role'];
+                $_SESSION['role']      = $user['role'];
 
                 // Redirect based on role
                 switch ($user['role']) {
@@ -56,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - AgriConnect</title>
+    <title>Login - The Tuber Cart</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -143,19 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 40px;
         }
 
-        .logo-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--gradient-primary);
-            border-radius: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-lg);
-            transform: rotate(-5deg);
-            transition: transform 0.3s ease;
-        }
+
 
         .logo-icon:hover {
             transform: rotate(0deg) scale(1.05);
@@ -578,7 +567,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="login-container">
+
         <div class="logo">
+            <img src="assets/images/logo.png" alt="Logo" style="width:60px;height:60px;display:block;margin:0 auto 10px auto;">
             <div class="logo-icon">
                 <i class="fas fa-seedling"></i>
             </div>

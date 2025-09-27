@@ -11,7 +11,7 @@ function isAdmin() {
 }
 
 function isSeller() {
-    return isset($_SESSION['role']) && $_SESSION['role'] === 'seller';
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'farmer';
 }
 
 function isCustomer() {

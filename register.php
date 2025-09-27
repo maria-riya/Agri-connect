@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - AgriConnect</title>
+    <title>Create Account - The Tuber Cart</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -98,12 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 30px;
         }
 
-        .logo i {
-            font-size: 48px;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
+      
         .logo h1 {
             color: #333;
             font-size: 28px;
@@ -342,6 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="registration-container">
         <div class="logo">
+            <img src="assets/images/logo.png" alt="Logo" style="width:60px;height:60px;display:block;margin:0 auto 10px auto;">
             <i class="fas fa-seedling"></i>
             <h1>The Tuber Cart</h1>
             <p>Join our agricultural community</p>

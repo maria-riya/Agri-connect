@@ -71,7 +71,7 @@ $total = 0; foreach($items as $it) $total += $it['price'] * $it['quantity'];
     </div>
     <div class="flex justify-between items-center mt-6">
         <div class="text-xl font-bold text-green-800">Total: ₹<?php echo $total; ?></div>
-        <a href="checkout.php" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow transition">Checkout</a>
+        <a href="payment_method.php" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow transition">Checkout</a>
     </div>
     <?php endif; ?>
 </main>
