@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . "/../includes/db.php";
 require_once __DIR__ . "/../includes/auth.php";
-// Ensure only admin can access this page
 requireAdmin();
 include __DIR__ . "/../includes/header.php";
 
-// Fetch key statistics from the database
 $user_count = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $product_count = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
 $order_count = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
@@ -38,7 +36,7 @@ $order_count = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                 <span class="text-4xl font-bold text-yellow-800"><?php echo $product_count; ?></span>
                 <span class="text-sm text-gray-500"> products listed</span>
             </p>
-            <a href="add_fertilizer.php" class="inline-block text-blue-600 hover:underline">Manage Products &rarr;</a>
+            <a href="fertilizers.php" class="inline-block text-blue-600 hover:underline">Manage Products &rarr;</a>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-200">
@@ -58,7 +56,7 @@ $order_count = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
     <div class="mt-10">
         <h3 class="text-2xl font-bold mb-4 text-green-700">Quick Navigation</h3>
         <ul class="list-disc list-inside space-y-2">
-            <li><a href="add_fertilizer.php" class="text-blue-600 hover:underline">Manage Products</a></li>
+            <li><a href="products.php" class="text-blue-600 hover:underline">Manage Products</a></li>
             <li><a href="categories.php" class="text-blue-600 hover:underline">Manage Categories</a></li>
             <li><a href="users.php" class="text-blue-600 hover:underline">Manage Users</a></li>
         </ul>

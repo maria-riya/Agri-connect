@@ -1,114 +1,53 @@
 <?php
-require_once __DIR__ . "/../includes/db.php";  // correct relative path
+require_once __DIR__ . "/../includes/db.php";
+require_once __DIR__ . "/../includes/auth.php";
+requireAdmin();
+include __DIR__ . "/../includes/header.php";
 
-// all fertilizers fetch
-$stmt = $pdo->query("SELECT * FROM fertilizers ORDER BY created_at DESC");
-$fertilizers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Fetch products with category names
+$stmt = $pdo->query("SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id ORDER BY p.id DESC");
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Fertilizers</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f6f8fa;
-            margin: 0;
-            padding: 20px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        .card-body {
-            padding: 15px;
-            flex-grow: 1;
-        }
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #222;
-        }
-        .price {
-            font-size: 16px;
-            color: #28a745;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        .stock {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 12px;
-        }
-        .desc {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px;
-            text-align: center;
-            background: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.3s ease;
-        }
-        .btn:hover {
-            background: #0056b3;
-        }
-    </style>
-</head>
-<body>
 
-<h2>Available Fertilizers</h2>
-<div class="grid">
-    <?php foreach($fertilizers as $f): ?>
-        <div class="card">
-            <?php if($f['image']): ?>
-                <img src="../uploads/<?= htmlspecialchars($f['image']) ?>" alt="<?= htmlspecialchars($f['title']) ?>">
-            <?php else: ?>
-                <img src="https://via.placeholder.com/300x180?text=No+Image" alt="No Image">
-            <?php endif; ?>
-            <div class="card-body">
-                <div class="title"><?= htmlspecialchars($f['title']) ?></div>
-                <div class="price">₹<?= number_format($f['price'], 2) ?></div>
-                <div class="stock">Stock: <?= $f['stock'] ?></div>
-                <div class="desc">
-                    <?= htmlspecialchars(substr($f['description'], 0, 60)) ?>...
-                </div>
-                <a href="#" class="btn">Add to Cart</a>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
+<main class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Manage Fertilizers & Tools</h2>
+    <p class="mb-6">Add, edit, or delete products sold to farmers.</p>
+    <a href="add_product.php" class="text-white bg-green-700 px-4 py-2 rounded hover:bg-green-600">Add New Product</a>
 
-</body>
-</html>
+    <table class="w-full mt-4 border-collapse border border-gray-300">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border px-4 py-2">ID</th>
+                <th class="border px-4 py-2">Image</th>
+                <th class="border px-4 py-2">Title</th>
+                <th class="border px-4 py-2">Price</th>
+                <th class="border px-4 py-2">Stock</th>
+                <th class="border px-4 py-2">Category</th>
+                <th class="border px-4 py-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($products as $product): ?>
+            <tr>
+                <td class="border px-4 py-2"><?php echo $product['id']; ?></td>
+                <td class="border px-4 py-2">
+                    <?php
+                        $imgPath = $product['image'];
+                        $imgSrc = (strpos($imgPath, 'assets/images/') === 0) ? '../' . $imgPath : '../uploads/' . $imgPath;
+                    ?>
+                    <img src="<?= htmlspecialchars($imgSrc) ?>" alt="<?= htmlspecialchars($product['title']); ?>" class="w-16 h-16 object-cover rounded">
+                </td>
+                <td class="border px-4 py-2"><?php echo htmlspecialchars($product['title']); ?></td>
+                <td class="border px-4 py-2">₹<?php echo $product['price']; ?></td>
+                <td class="border px-4 py-2"><?php echo $product['stock']; ?></td>
+                <td class="border px-4 py-2"><?php echo htmlspecialchars($product['category_name']); ?></td>
+                <td class="border px-4 py-2">
+                    <a href="edit_product.php?id=<?php echo $product['id']; ?>" class="text-blue-600 hover:underline">Edit</a> |
+                    <a href="delete_product.php?id=<?php echo $product['id']; ?>" class="text-red-600 hover:underline" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</main>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

@@ -1,160 +1,85 @@
 <?php
 require_once __DIR__ . "/../includes/db.php";
 require_once __DIR__ . "/../includes/auth.php";
+requireAdmin(); // Added check to ensure only admin can access
+include __DIR__ . "/../includes/header.php";
 
-requireAdmin();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $seller_id = 1; // Assuming admin is seller ID 1
+    $category_id = $_POST['category_id'];
+    $title = $_POST['title'];
+    $description = $_POST['description'] ?? '';
+    $price = $_POST['price'];
+    $stock = $_POST['stock'] ?? 0;
+    
+    $image = null;
+    $error = null;
 
-$msg = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $title = trim($_POST['title']);
-    $description = trim($_POST['description']);
-    $price = (float)$_POST['price'];
-    $stock = (int)$_POST['stock'];
-
-    // slug generate
-    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $title));
-
-    // image upload
-    $imageName = null;
-    if (!empty($_FILES['image']['name'])) {
-        $targetDir = __DIR__ . "/../uploads/";
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0777, true);
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . "/../assets/images/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
-        $imageName = time() . "_" . basename($_FILES['image']['name']);
-        $targetFile = $targetDir . $imageName;
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $fileName = uniqid("prod_", true) . "." . strtolower($ext);
+        $targetPath = $uploadDir . $fileName;
 
-        $check = getimagesize($_FILES["image"]["tmp_name"]);
-        if ($check !== false) {
-            move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile);
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+            $image = "assets/images/" . $fileName;
         } else {
-            $msg = "❌ Invalid image file.";
+            $error = "Image upload failed. Please check folder permissions.";
         }
     }
 
-    if (empty($msg)) {
-        $stmt = $pdo->prepare("INSERT INTO fertilizers (title, slug, description, price, stock, image) VALUES (?,?,?,?,?,?)");
-        $stmt->execute([$title, $slug, $description, $price, $stock, $imageName]);
-        $msg = "✅ Fertilizer added successfully!";
+    if (!isset($error)) {
+        $stmt = $pdo->prepare("INSERT INTO products (seller_id, category_id, title, description, price, stock, image) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        if ($stmt->execute([$seller_id, $category_id, $title, $description, $price, $stock, $image])) {
+            header("Location: fertilizers.php");
+            exit;
+        } else {
+            $error = "Failed to add product.";
+        }
     }
 }
+
+$categories = $pdo->query("SELECT * FROM categories")->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Fertilizer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f6f8fa;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 500px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            color: #444;
-        }
-        input[type="text"],
-        input[type="number"],
-        input[type="file"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #28a745;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background: #218838;
-        }
-        .msg {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .msg.success {
-            background: #d4edda;
-            color: #155724;
-        }
-        .msg.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .back-link {
-            display: block;
-            margin-top: 15px;
-            text-align: center;
-            text-decoration: none;
-            color: #007bff;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h2>Add Fertilizer</h2>
-    <?php if($msg): ?>
-        <div class="msg <?= strpos($msg, '✅') !== false ? 'success' : 'error' ?>">
-            <?= htmlspecialchars($msg) ?>
+
+<main class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Add New Fertilizer/Tool</h2>
+    <?php if (isset($error)) echo "<p class='text-red-600'>$error</p>"; ?>
+    <form method="post" enctype="multipart/form-data" class="space-y-4 max-w-md">
+        <div>
+            <label>Title:</label>
+            <input type="text" name="title" required class="w-full border px-2 py-1">
         </div>
-    <?php endif; ?>
-
-    <form method="post" enctype="multipart/form-data">
-        <label>Title:</label>
-        <input type="text" name="title" required>
-
-        <label>Description:</label>
-        <textarea name="description"></textarea>
-
-        <label>Price:</label>
-        <input type="number" step="0.01" name="price" required>
-
-        <label>Stock:</label>
-        <input type="number" name="stock" required>
-
-        <label>Image:</label>
-        <input type="file" name="image">
-
-        <button type="submit">Add Fertilizer</button>
+        <div>
+            <label>Price:</label>
+            <input type="number" step="0.01" name="price" required class="w-full border px-2 py-1">
+        </div>
+        <div>
+            <label>Stock:</label>
+            <input type="number" name="stock" value="0" class="w-full border px-2 py-1">
+        </div>
+        <div>
+            <label>Category:</label>
+            <select name="category_id" required class="w-full border px-2 py-1">
+                <option value="">Select Category</option>
+                <?php foreach ($categories as $cat): ?>
+                    <option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div>
+            <label>Description:</label>
+            <textarea name="description" class="w-full border px-2 py-1"></textarea>
+        </div>
+        <div>
+            <label>Choose Image:</label>
+            <input type="file" name="image" accept="image/*" class="w-full border px-2 py-1">
+        </div>
+        <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-600">Add Product</button>
     </form>
+</main>
 
-    <a class="back-link" href="fertilizers_list.php">⬅ Back to Fertilizers List</a>
-</div>
-</body>
-</html>
+<?php include __DIR__ . "/../includes/footer.php"; ?>
